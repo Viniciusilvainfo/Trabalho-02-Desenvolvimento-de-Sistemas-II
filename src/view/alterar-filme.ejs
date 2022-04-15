@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <%- include('includes/head') %>
 
@@ -7,13 +7,13 @@
 
     <%- include('includes/navbar') %>
 
-    <h1>Alterar filme</h1>
+    <h1>Alterar Grupo</h1>
 
-    <form action="/filmes/alterar/<%= filme.id %>" method="POST">
+    <form action="/grupos/alterar/<%= grupo.id %>" method="POST">
         <!-- <input type="hidden" name="id" value="<%= filme.id %>" -->
         
         <label for="nome">Nome</label>
-        <input type="text" name="nome" value="<%= filme.nome %>">
+        <input type="text" name="nome" value="<%= grupo.nome %>">
         <br /><br />
 
         <label for="genero">Genero</label>

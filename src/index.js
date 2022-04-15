@@ -33,11 +33,11 @@ app.use('*', (req, res, next) => {
 })
 
 app.get('/', (req, res) => {
-    res.redirect('/filmes');
+    res.redirect('/grupos');
 });
 
-const filmesRoutes = require('./routes/filmes-routes');
-app.use('/filmes', filmesRoutes);
+const gruposRoutes = require('./routes/grupos-routes');
+app.use('/grupos', gruposRoutes);
 
 const usersRoutes = require('./routes/users-routes');
 app.use('/users', usersRoutes);
@@ -45,7 +45,7 @@ app.use('/users', usersRoutes);
 app.use('*', (req, res) => {
     return res.status(404).send(`
         <h1>Sorry, not found!!!</h1>
-        <a href="/filmes">VOLTAR</a>
+        <a href="/grupos">VOLTAR</a>
     `);
 })
 

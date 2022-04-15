@@ -41,21 +41,21 @@ header a:hover {
     width: 80%;
     margin: auto;
     margin-top: 40px;
-  }
-  
-  #filmes td, #filmes th {
+}
+
+#filmes td, #filmes th {
     border: 1px solid #ddd;
     padding: 8px;
-  }
-  
-  #filmes tr:nth-child(even){background-color: #f2f2f2;}
-  
-  #filmes tr:hover {background-color: #ddd;}
-  
-  #filmes th {
+}
+
+#filmes tr:nth-child(even){background-color: #f2f2f2;}
+
+#filmes tr:hover {background-color: #ddd;}
+
+#filmes th {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
     background-color: #04AA6D;
     color: white;
-  }
+}

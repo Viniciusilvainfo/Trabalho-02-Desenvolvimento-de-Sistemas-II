@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <%- include('includes/head') %>
 
@@ -11,7 +11,7 @@
       <h1>Bem vind@ <%= user.nome %></h1>
     <% } %>
 
-    <h1>Lista de todos os filmes</h1>
+    <h1>Lista de todos os grupos</h1>
 
     <table id="filmes">
         <tr>
@@ -24,11 +24,11 @@
           <td>TESTE AAA</td>
           <td>Ver detalhes</td>
         </tr>
-        <% filmes.forEach(filme => { %>
+        <% grupos.forEach(grupo => { %>
           <tr>
-            <td><%= filme.id %></td>
-            <td><%= filme.nome %></td>
-            <td> <a href="/filmes/<%= filme.id %>"> Ver detalhes </a> </td>
+            <td><%= grupo.id %></td>
+            <td><%= grupo.nome %></td>
+            <td> <a href="/grupos/<%=grupo.id%>">Detalhes</a>  </td>
           </tr>
         <% }) %>
     </table>
