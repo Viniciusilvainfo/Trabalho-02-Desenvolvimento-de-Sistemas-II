@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('includes/head') %>
+
+<body>
+
+    <%- include('includes/navbar') %>
+
+    <h1>Alterar filme</h1>
+
+    <form action="/filmes/alterar/<%= filme.id %>" method="POST">
+        <!-- <input type="hidden" name="id" value="<%= filme.id %>" -->
+        
+        <label for="nome">Nome</label>
+        <input type="text" name="nome" value="<%= filme.nome %>">
+        <br /><br />
+
+        <label for="genero">Genero</label>
+        <input type="text" name="genero">
+        <br /><br />
+
+        <label for="sinopse">Sinopse</label>
+        <input type="text" name="sinopse">
+        <br /><br />
+        
+        <label for="lancamento">Lançado em</label>
+        <input type="date" name="lancamento">
+        <br /><br />
+
+        <input type="submit" value="ATUALIZAR">
+        <br /><br />        
+
+    </form>
+
+    <footer>
+        <p>Desenvolvido nas aulas do IFRS <3</p>
+    </footer>
+
+</body>
+</html>

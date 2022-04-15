@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<%- include('includes/head') %>
+
+<body>
+
+    <%- include('includes/navbar') %>    
+
+    <h1>Filme <%= filme.nome %></h1>
+    <h2>Genero <%= filme.genero %></h2>
+    
+    <h3>Lançado em: <%= filme.lancamento %></h3>
+
+    <p><%= filme.sinopse %></p>
+
+    <a href="/filmes/alterar/<%= filme.id %>">ALTERAR</a>
+    <br/><br/>
+    <a href="/filmes/deletar/<%= filme.id %>">DELETAR</a>
+</body>
+</html>
