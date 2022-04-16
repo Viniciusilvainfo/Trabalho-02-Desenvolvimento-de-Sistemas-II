@@ -1,4 +1,5 @@
 const { dbcon } = require("../config/connection-db");
+const bcrypt = require('bcrypt');
 
 class User {
     constructor(id, nome, email, senha, nascimento) {
@@ -13,6 +14,7 @@ class User {
 class UserDAO {
 
     static async cadastrar(user) {
+
         const sql = 'INSERT INTO public.usuario (nome, email, senha, nascimento) VALUES ($1, $2, $3, $4);';
         const values = [user.nome, user.email, user.senha, user.nascimento];
 
@@ -22,6 +24,24 @@ class UserDAO {
             console.log('NAO FOI POSSIVEL INSERIR NO BANCO');
             console.log({ error });
         }
+    }
+
+    static async logar(user) {
+        const sql = 'SELECT id, nome, email FROM usuario where email like $1';
+        const values = [user.email]; 
+        const usuarioEcontrado = await dbcon.query(sql, values);
+        return usuarioEcontrado;
+    }
+
+    static async verificaSenha(user) {
+        const sql = 'SELECT senha FROM usuario where email like $1';
+        const values = [user.email];
+
+        const usuarioEcontrado = await dbcon.query(sql, values);
+
+        const confereSenha = bcrypt.compareSync(user.senha, usuarioEcontrado.rows[0].senha);
+
+        return confereSenha;
     }
 }
 

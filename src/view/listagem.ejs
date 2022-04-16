@@ -7,8 +7,8 @@
 
     <%- include('includes/navbar') %>    
 
-    <% if (user) { console.log(user) %>
-      <h1>Bem vind@ <%= user[0].nome %></h1>
+    <% if (user) { %>
+      <h1>Bem vind@ <%= user.nome %></h1>
     <% } %>
 
     <h1>Lista de todos os grupos</h1>
