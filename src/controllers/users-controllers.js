@@ -1,42 +1,55 @@
 const bcrypt = require('bcrypt');
-
-const users = [];
+const { dbcon } = require('../config/connection-db');
+const { User, UserDAO } = require('../models/user');
+const session = require('express-session');
 
 class UsersController {
     async cadastrar(req, res) {
-        console.log('UsersController/cadastrar');
 
         const userBody = req.body;
         const senha = bcrypt.hashSync(userBody.senha, 10); 
+
+        const user = new User (null, userBody.nome, userBody.email, senha, userBody.nascimento);
+
+        await UserDAO.cadastrar(user);
+
+        const sql = 'SELECT id, nome, email FROM usuario where email like $1';
+        const values = [userBody.email]; 
+        const result = await dbcon.query(sql, values);
         
-        const user = {
-            nome: userBody.nome,
-            email: userBody.email,
-            senha      
-        }
+        req.session.user = result.rows;
 
-        users.push(user);  // salvando no banco
-
-        console.log({ users });
-        res.redirect('/');
+        return res.redirect('/');
     }
 
     async login(req, res) {
+        const userBody = req.body;
+        
         // ACHAR COM O EMAIL CERTO
-        const { email, senha } = req.body;
-        const usuarioEcontrado = users.find(u => u.email == email);
+        // const { email, senha } = req.body;
 
-        if (!usuarioEcontrado) return res.send('User nao encontrado');
+        const sql = 'SELECT nome, email, senha FROM usuario where email like $1';
+        const values = [userBody.email]; 
+        const usuarioEcontrado = await dbcon.query(sql, values);
+
+        if (usuarioEcontrado.rows[0] == undefined) return res.send('User nao encontrado');
 
         // VERIFICAR A SENHA
-        const confere = bcrypt.compareSync(senha, usuarioEcontrado.senha);
+        const confere = bcrypt.compareSync(userBody.senha, usuarioEcontrado.rows[0].senha);
         if (confere) {
-            req.session.user = usuarioEcontrado;
-            return res.send('Usuario e senha confirmados, vc fez o login');
+            req.session.user = usuarioEcontrado.rows;
+
+        return res.redirect('/');
         } else {
             return res.send('Senha nao confere...');
         }
         
+    }
+
+    async logout(req, res) {
+        req.session.destroy();
+
+        return res.redirect('/');
     }
 }
 

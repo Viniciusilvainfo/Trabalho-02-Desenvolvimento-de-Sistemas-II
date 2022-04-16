@@ -25,7 +25,7 @@ app.use(session({
 app.use(express.static('public'));
 
 app.use('*', (req, res, next) => {
-    console.log(`Request recebido para ${req.baseUrl} as ${new Date()}`);
+    // console.log(`Request recebido para ${req.baseUrl} as ${new Date()}`);
 
     // atrasando o usuario kkkkk
     // setTimeout(() => next(), 1000);
@@ -50,7 +50,7 @@ app.use('*', (req, res) => {
 })
 
 const dbcon = require('./config/connection-db');
-console.log(dbcon);
+// console.log(dbcon);
 
 // const PORT = process.env.PORT;
 // console.log({PORT});

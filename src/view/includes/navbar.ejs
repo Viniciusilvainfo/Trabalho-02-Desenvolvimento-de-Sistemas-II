@@ -1,10 +1,16 @@
 <header>
-    <h1 id="nav-title">IFLIX</h1>
+    <h1 id="nav-title">REDE SOCIAL</h1>
     <nav>
         <ul>
-            <li><a href="/grupos">Grupos</a></li>
-            <li><a href="user/login.html">LOGIN</a></li>
-            <li><a href="/grupos/cadastrar">CADASTRAR</a></li>
+            <li><a href="/grupos">GRUPOS</a></li>
+            <% if (user !== undefined) { %>
+                <li><a href="/grupos/cadastrar">CADASTRAR GRUPO</a></li>
+                <li><a id="perfil" href="/users/perfil">VER PERFIL</a></li> 
+                <li><a href="/users/logout">LOGOUT</a></li> 
+            <%} else { %>
+                <li><a href="/user/login.html">LOGIN</a></li>
+                <li><a href="/user/cadastro.html">CADASTRO</a></li>
+            <%}%>
         </ul>
     </nav>
 </header>

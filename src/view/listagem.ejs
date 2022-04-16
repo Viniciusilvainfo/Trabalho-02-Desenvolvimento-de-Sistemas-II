@@ -7,8 +7,8 @@
 
     <%- include('includes/navbar') %>    
 
-    <% if (user) { %>
-      <h1>Bem vind@ <%= user.nome %></h1>
+    <% if (user) { console.log(user) %>
+      <h1>Bem vind@ <%= user[0].nome %></h1>
     <% } %>
 
     <h1>Lista de todos os grupos</h1>
@@ -18,11 +18,6 @@
           <th>ID</th>
           <th>Nome</th>
           <th></th>
-        </tr>
-        <tr>
-          <td>AAA</td>
-          <td>TESTE AAA</td>
-          <td>Ver detalhes</td>
         </tr>
         <% grupos.forEach(grupo => { %>
           <tr>

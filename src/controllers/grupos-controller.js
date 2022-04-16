@@ -5,7 +5,7 @@ const { Grupo, GrupoDAO } = require('../models/grupo');
 class GruposController {
 
     async mostraCadastro(req, res) {
-        return res.render('cadastrar');
+        return res.render('cadastrar', {user : req.session.user});
     }
 
     async mostraAlterar(req, res) {
@@ -24,8 +24,8 @@ class GruposController {
     }
 
     async listar(req, res) {
-        console.log('PAGINA INICIAL');
-        console.log({ session: req.session });
+        // console.log('PAGINA INICIAL');
+        // console.log({ session: req.session });
         // LISTAGEM DE TODOS OS FILMES MOSTRANDO O NOME
         // O NOME É CLICAVEL E REDIRECIONA PARA O DETALHAR DO FILME
         // let html = '';
@@ -33,7 +33,7 @@ class GruposController {
         //     html += `<a href="/filmes/${filme.id}">${filme.nome}</a><br></br>`
         // })
         const result = await dbcon.query('SELECT * FROM grupo');
-        console.log({ result });
+        // console.log({ result });
 
         // return res.send(html);
         return res.render('listagem', { user: req.session.user, grupos: result.rows });

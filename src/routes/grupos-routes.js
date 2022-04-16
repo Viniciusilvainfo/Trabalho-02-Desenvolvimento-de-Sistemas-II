@@ -14,6 +14,7 @@ routes.get('/', gruposController.listar);
 
 routes.get('/:id', gruposController.detalhar);
 
+// mesmo que /grupos
 routes.post('/', gruposController.cadastrar);
 
 routes.get('/alterar/:id', gruposController.mostraAlterar);
