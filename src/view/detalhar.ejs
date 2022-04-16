@@ -11,6 +11,20 @@
     <h2>Grupo id <%= grupo.id %></h2>
     
     <h3>Grupo admin <%= grupo.adm %></h3>
+    <% if (tipo != undefined) { %>
+    <% if (tipo.tipo == "adm" || tipo.tipo == "escritor") { %>
+        <form action="/grupos/<%=grupo.id%>/enviarMensagem" method="post">
+            <input type="hidden" name="grupo" value="<%=grupo.id%>">
+            <input type="hidden" name="usuario" value="<%=user.id%>">
+            <input type="text" name="mensagem"><button>Enviar mensagem</button>
+        </form>    
+    <% }}%>
+    <div id="mensagens">
+        <% if(mensagens != undefined) { 
+            mensagens.forEach(mensagem =>  {%>
+                <p><%= mensagem.texto %></p>
+            <% })}%>
+    </div>
 
     <br/><br/>
 </body>

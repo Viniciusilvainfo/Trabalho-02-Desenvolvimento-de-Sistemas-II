@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<%- include('includes/head') %>
+
+<body>
+
+    <%- include('includes/navbar') %>
+
+    <% if(user != undefined) { %>
+
+    <h1>Criar Grupo</h1>
+
+    <form action="/grupos" method="POST">
+        <label for="nome">Nome</label>
+        <input type="text" name="nome">
+        <br /><br />
+
+        <input type="hidden" name="adm" value="<%= user.id %>">
+        <input type="submit" value="CADASTRAR">
+        <br /><br />        
+
+    </form>
+
+    <% }else { %>
+        <h3>Você não tem acesso a essa página</h3>
+        <a href="/">Voltar</a>
+    <% } %>
+
+</body>
+</html>

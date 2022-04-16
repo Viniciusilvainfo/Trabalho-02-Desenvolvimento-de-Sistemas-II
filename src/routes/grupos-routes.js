@@ -14,6 +14,8 @@ routes.get('/', gruposController.listar);
 
 routes.get('/:id', gruposController.detalhar);
 
+routes.post('/:id/enviarMensagem', gruposController.enviarMensagem);
+
 // mesmo que /grupos
 routes.post('/', gruposController.cadastrar);
 

@@ -1,46 +1,82 @@
-const { nanoid } = require('nanoid');
+// const { nanoid } = require('nanoid');
 const { dbcon } = require('../config/connection-db');
 const { Grupo, GrupoDAO } = require('../models/grupo');
 
 class GruposController {
 
     async mostraCadastro(req, res) {
-        return res.render('cadastrar', {user : req.session.user});
+        return res.render('cadastrarGrupo', {user : req.session.user});
+    }
+
+    async cadastrar(req, res) {
+
+        const grupoBody = req.body;
+
+        const grupo = new Grupo(null, grupoBody.nome, grupoBody.adm);
+        await GrupoDAO.cadastrar(grupo);
+        return res.redirect('/');
     }
 
     async mostraAlterar(req, res) {
-        const { id } = req.params;
+        // const { id } = req.params;
         // const filme = await FilmeDAO.buscaPeloId(id);
         // res.render('alterar-filme', { filme: filme })
     }
 
     async alterar(req, res) {
-        const { id } = req.params;
-        const { nome, genero, sinopse, lancamento} = req.body;
-        const grupo = new Grupo(id, nome, genero, sinopse, lancamento);
+        // const { id } = req.params;
+        // const { nome, genero, sinopse, lancamento} = req.body;
+        // const grupo = new Grupo(id, nome, genero, sinopse, lancamento);
         
         // const resultado = await FilmeDAO.atualiza(filme);
         // res.send("Chamei o alterar do controller e fui pro banco... resultado " + resultado);
     }
 
     async listar(req, res) {
-        // console.log('PAGINA INICIAL');
-        // console.log({ session: req.session });
-        // LISTAGEM DE TODOS OS FILMES MOSTRANDO O NOME
-        // O NOME É CLICAVEL E REDIRECIONA PARA O DETALHAR DO FILME
-        // let html = '';
-        // filmes.forEach(filme => {
-        //     html += `<a href="/filmes/${filme.id}">${filme.nome}</a><br></br>`
-        // })
         const result = await dbcon.query('SELECT * FROM grupo');
-        // console.log({ result });
-
-        // return res.send(html);
         return res.render('listagem', { user: req.session.user, grupos: result.rows });
     }
 
-    async deletar(req, res) {
+    async detalhar(req, res) {
         const { id } = req.params;
+        const grupo = await GrupoDAO.buscaPeloId(id);
+        console.log(req.session.user);
+        console.log(grupo);
+        var tipo = undefined;
+        if(req.session.user != undefined) {
+            
+            // ve se o usuario faz parte do grupo
+            const result = await GrupoDAO.verificaGrupo(grupo, req.session.user);
+
+            console.log(result.rows[0]);
+            
+            if(result.rows[0] != undefined) {
+                tipo = result.rows[0];
+                //retorna as mensagens do grupo
+                const mensagens = await GrupoDAO.mostrarMensagens(grupo); 
+
+                if(mensagens != undefined) {
+                    console.log(mensagens + 'D');
+                }else {
+                    tipo = undefined;
+                }
+                return res.render('detalhar', { grupo: grupo, user: req.session.user, mensagens:mensagens, tipo: tipo});
+            }
+            
+        }
+
+        return res.render('detalhar', { grupo: grupo, user: req.session.user, mensagens:undefined, tipo:tipo });
+    }
+
+    async enviarMensagem(req, res) {
+        const grupoBody = req.body;
+        await GrupoDAO.dataAtual();
+        console.log(grupoBody);
+        // await GrupoDAO.cadastrarMensagem(grupoBody, data);
+    }
+
+    async deletar(req, res) {
+        // const { id } = req.params;
         // BUSCAR O FILME E REMOVER DO VETOR
         // const filmeIdx = filmes.findIndex(f => f.id == id);
         // filmes.splice(filmeIdx, 1);
@@ -53,26 +89,6 @@ class GruposController {
         // return res.redirect('/filmes')
     }
 
-    async detalhar(req, res) {
-        const { id } = req.params;
-        const grupo = await GrupoDAO.buscaPeloId(id);
-        return res.render('detalhar', { grupo: grupo });
-
-    }
-
-    async cadastrar(req, res) {
-        //DEPOIS DE CADASTRAR, REDIRECIONA PARA A LISTAGEM
-        console.log(`Cadastrando um grupo`);
-        console.log({ body: req.body });
-        
-        // const { nome, genero, sinopse, lancamento} = req.body;
-        
-        // const filme = new Filme(null, nome, genero, sinopse, lancamento);
-        // await FilmeDAO.cadastrar(filme);
-        
-        // return res.redirect('/filmes');
-        // return res.send('Deveria cadastrar um filme');
-    }
 }
 
 module.exports = { GruposController }

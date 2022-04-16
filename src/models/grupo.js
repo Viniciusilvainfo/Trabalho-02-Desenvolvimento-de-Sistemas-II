@@ -1,12 +1,11 @@
+const res = require("express/lib/response");
 const { dbcon } = require("../config/connection-db");
 
 class Grupo {
-    constructor(id, nome, email, senha, nascimento) {
+    constructor(id, nome, adm) {
         this.id = id;
         this.nome = nome;
-        this.email = email;
-        this.senha = senha;
-        this.nascimento = nascimento;
+        this.adm = adm;
     }
 }
 
@@ -17,8 +16,34 @@ class GrupoDAO {
         const sql = 'SELECT * FROM grupo where id = $1';
         const result = await dbcon.query(sql, [id]);
         const grupo = result.rows[0];
-        // const filme = new Filme() -> mundo ideal <3
         return grupo;
+    }
+
+    static async cadastrar(grupo) {
+        const sql = 'INSERT INTO public.grupo (nome,adm) VALUES ($1, $2)  returning *;';
+        const values = [grupo.nome, grupo.adm];
+
+        try {
+            const result = await dbcon.query(sql, values);
+            const grupocriado = result.rows[0];
+            this.adicionaGrupo(grupo, grupocriado, 'adm');
+        } catch (error) {
+            console.log('NAO FOI POSSIVEL INSERIR');
+            console.log({ error });
+        }
+    }
+
+    static async adicionaGrupo(grupo, grupocriado, tipo) {
+        const sql = 'INSERT INTO public.grupo_usuario (usuario, grupo, tipo) VALUES ($1, $2, $3);';
+        const values = [grupo.adm, grupocriado.id, tipo];
+
+        try {
+            const result = await dbcon.query(sql, values);
+            return result;
+        } catch (error) {
+            console.log('NAO FOI POSSIVEL INSERIR');
+            console.log({ error });
+        }
     }
 
     static async atualiza(grupo) {
@@ -39,17 +64,32 @@ class GrupoDAO {
         // }
     }
 
-    static async cadastrar(grupo) {
+    static async verificaGrupo(grupo, user) {
+        const sql = 'SELECT tipo FROM grupo_usuario where usuario = $1 and grupo = $2';
+        const values = [user.id, grupo.id];
+        const result = await dbcon.query(sql, values);
+        // const grupo = result.rows[0];
+        return result;
+    }
 
-        // const sql = 'INSERT INTO public.filmes (nome,genero,sinopse,data_lancamento) VALUES ($1, $2, $3, $4);';
-        // const values = [filme.nome, filme.genero, filme.sinopse, filme.lancamento];
+    static async dataAtual() {
+        const data = new Date();
+        const timeElapsed = Date.now();
+        const today = new Date(timeElapsed);
+        today.toISOString();
+        console.log(today);
+        return data;
+    }
+
+    static async mostrarMensagens(grupo) {
+        const sql = 'SELECT * FROM mensagem where grupo = $1 order by dataEnvio';
+        const values = [grupo.id];
+        const mensagens = await dbcon.query(sql, values);
+        return mensagens.rows;
+    }
+
+    static async cadastrarMensagem(dados, data) {
         
-        // try {
-        //     await dbcon.query(sql, values);
-        // } catch (error) {
-        //     console.log('NAO FOI POSSIVEL INSERIR');
-        //     console.log({ error });
-        // }
     }
 }
 
