@@ -1,6 +1,6 @@
-// const { nanoid } = require('nanoid');
 const { dbcon } = require('../config/connection-db');
 const { Grupo, GrupoDAO } = require('../models/grupo');
+const { User, UserDAO } = require('../models/user');
 
 class GruposController {
 
@@ -33,14 +33,14 @@ class GruposController {
     }
 
     async listar(req, res) {
-        const result = await dbcon.query('SELECT * FROM grupo');
+        const result = await dbcon.query('SELECT count(*) as qtde, grupo.nome, grupo.id, grupo.adm FROM grupo JOIN grupo_usuario ON grupo.id = grupo_usuario.grupo GROUP BY grupo.id');
         return res.render('listagem', { user: req.session.user, grupos: result.rows });
     }
 
     async detalhar(req, res) {
         const { id } = req.params;
         const grupo = await GrupoDAO.buscaPeloId(id);
-        console.log(req.session.user);
+        // console.log(req.session.user);
         console.log(grupo);
         var tipo = undefined;
         if(req.session.user != undefined) {
@@ -48,7 +48,7 @@ class GruposController {
             // ve se o usuario faz parte do grupo
             const result = await GrupoDAO.verificaGrupo(grupo, req.session.user);
 
-            console.log(result.rows[0]);
+            // console.log(result.rows[0]);
             
             if(result.rows[0] != undefined) {
                 tipo = result.rows[0];
@@ -56,7 +56,7 @@ class GruposController {
                 const mensagens = await GrupoDAO.mostrarMensagens(grupo); 
 
                 if(mensagens != undefined) {
-                    console.log(mensagens + 'D');
+                    // console.log(mensagens + 'D');
                 }else {
                     tipo = undefined;
                 }
@@ -70,9 +70,23 @@ class GruposController {
 
     async enviarMensagem(req, res) {
         const grupoBody = req.body;
-        await GrupoDAO.dataAtual();
-        console.log(grupoBody);
-        // await GrupoDAO.cadastrarMensagem(grupoBody, data);
+        const dataAtual = await GrupoDAO.dataAtual();
+        await GrupoDAO.cadastrarMensagem(grupoBody, dataAtual);
+
+        return res.redirect('/grupos/'+grupoBody.grupo);
+    }
+
+    async adicionarUsuario(req, res) {
+        const grupoBody = req.body;
+        const user = new User (null, null, grupoBody.usuarioadd, null, null);
+
+        const usuarioEncontrado = await UserDAO.logar(user);
+        console.log('ANTES');
+        console.log(usuarioEncontrado.rows[0]);
+        console.log('DEPOIS');
+        if(usuarioEncontrado.rows[0] == undefined) return res.send('User nao encontrado');
+        await GrupoDAO.adicionaGrupo(usuarioEncontrado.rows[0].id, grupoBody.grupo, grupoBody.tipo);
+        return res.redirect('/');
     }
 
     async deletar(req, res) {

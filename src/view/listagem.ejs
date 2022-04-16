@@ -15,13 +15,13 @@
 
     <table id="filmes">
         <tr>
-          <th>ID</th>
+          <th>Numero de membros</th>
           <th>Nome</th>
           <th></th>
         </tr>
         <% grupos.forEach(grupo => { %>
           <tr>
-            <td><%= grupo.id %></td>
+            <td><%= grupo.qtde %></td>
             <td><%= grupo.nome %></td>
             <td> <a href="/grupos/<%=grupo.id%>">Detalhes</a>  </td>
           </tr>

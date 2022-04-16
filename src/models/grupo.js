@@ -13,7 +13,8 @@ class Grupo {
 class GrupoDAO {
 
     static async buscaPeloId(id) {
-        const sql = 'SELECT * FROM grupo where id = $1';
+        // const sql = 'SELECT * FROM grupo where id = $1';
+        const sql = 'SELECT count(*) as qtde, grupo.nome, grupo.id, grupo.adm FROM grupo JOIN grupo_usuario ON grupo.id = grupo_usuario.grupo WHERE grupo.id = $1 GROUP BY grupo.id';
         const result = await dbcon.query(sql, [id]);
         const grupo = result.rows[0];
         return grupo;
@@ -26,16 +27,16 @@ class GrupoDAO {
         try {
             const result = await dbcon.query(sql, values);
             const grupocriado = result.rows[0];
-            this.adicionaGrupo(grupo, grupocriado, 'adm');
+            this.adicionaGrupo(grupo.adm, grupocriado.id, 'adm');
         } catch (error) {
             console.log('NAO FOI POSSIVEL INSERIR');
             console.log({ error });
         }
     }
 
-    static async adicionaGrupo(grupo, grupocriado, tipo) {
+    static async adicionaGrupo(user, grupo, tipo) {
         const sql = 'INSERT INTO public.grupo_usuario (usuario, grupo, tipo) VALUES ($1, $2, $3);';
-        const values = [grupo.adm, grupocriado.id, tipo];
+        const values = [user, grupo, tipo];
 
         try {
             const result = await dbcon.query(sql, values);
@@ -73,12 +74,9 @@ class GrupoDAO {
     }
 
     static async dataAtual() {
-        const data = new Date();
-        const timeElapsed = Date.now();
-        const today = new Date(timeElapsed);
-        today.toISOString();
-        console.log(today);
-        return data;
+        let d = new Date();
+        const dataAtual = d.getFullYear() + '-'+d.getMonth()+'-'+d.getDate()+ ' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds()
+        return dataAtual;
     }
 
     static async mostrarMensagens(grupo) {
@@ -89,7 +87,25 @@ class GrupoDAO {
     }
 
     static async cadastrarMensagem(dados, data) {
-        
+        const sql = 'INSERT INTO mensagem (usuario, dataEnvio, texto, grupo) values ($1, $2, $3, $4)';
+        const values = [dados.usuario, data, dados.mensagem, dados.grupo];
+        try {
+            await dbcon.query(sql, values);
+        } catch (error) {
+            console.log('NAO FOI POSSIVEL INSERIR');
+            console.log({ error });
+        }
+    }
+
+    static async adicionarUsuario(dados) {
+        const sql = 'INSERT INTO mensagem (usuario, dataEnvio, texto, grupo) values ($1, $2, $3, $4)';
+        const values = [dados.usuario, data, dados.mensagem, dados.grupo];
+        try {
+            await dbcon.query(sql, values);
+        } catch (error) {
+            console.log('NAO FOI POSSIVEL INSERIR');
+            console.log({ error });
+        }
     }
 }
 

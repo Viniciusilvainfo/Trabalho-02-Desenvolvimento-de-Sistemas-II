@@ -12,20 +12,61 @@
     
     <h3>Grupo admin <%= grupo.adm %></h3>
     <% if (tipo != undefined) { %>
-    <% if (tipo.tipo == "adm" || tipo.tipo == "escritor") { %>
-        <form action="/grupos/<%=grupo.id%>/enviarMensagem" method="post">
+        <% if (tipo.tipo == "adm" || tipo.tipo == "escritor") { %>
+            <form action="/grupos/<%=grupo.id%>/enviarMensagem" method="post">
+                <input type="hidden" name="grupo" value="<%=grupo.id%>">
+                <input type="hidden" name="usuario" value="<%=user.id%>">
+                <input type="text" name="mensagem"><button>Enviar mensagem</button>
+            </form>    
+        <% if(tipo.tipo=="adm") { %>
+            <form action="/grupos/<%=grupo.id%>/adicionarUsuario" method="post">
             <input type="hidden" name="grupo" value="<%=grupo.id%>">
             <input type="hidden" name="usuario" value="<%=user.id%>">
-            <input type="text" name="mensagem"><button>Enviar mensagem</button>
-        </form>    
-    <% }}%>
+            Escritor:
+            <input type="radio" name="tipo" value="escritor">
+            Leitor:
+            <input type="radio" name="tipo" value="leitor">
+            <input type="text" name="usuarioadd"><button>Adicionar usuário</button>
+        </form>  
+        <%}}}%>
     <div id="mensagens">
         <% if(mensagens != undefined) { 
-            mensagens.forEach(mensagem =>  {%>
-                <p><%= mensagem.texto %></p>
+            mensagens.forEach(mensagem => {%>
+                <% let d = mensagem.dataenvio;
+                mensagem.dataenvio = data(d);
+                %>
+                <p><%= mensagem.texto %> às <%= mensagem.dataenvio %></p>
             <% })}%>
     </div>
-
     <br/><br/>
+
+    <% function data(d) {
+        let dia = d.getDate().toString();
+        let mes = d.getMonth().toString();
+        let hora = d.getHours().toString();
+        let minuto = d.getMinutes().toString();
+        console.log(dia.length);
+        console.log(mes.length);
+        console.log(hora.length);
+        console.log(minuto.length);
+        if (dia.length == 1) {
+            dia = '0'+dia; 
+        }
+        if (mes.length == 1) {
+            mes = '0'+mes;
+        }
+        if (hora.length == 1) {
+            hora = '0'+hora;
+        }
+        if (minuto.length == 1) {
+            minuto = '0'+minuto;
+        }
+
+        let dataMensagem = dia+'/'+mes+'/'+d.getFullYear()+ ' às '+hora+':'+minuto;
+        return dataMensagem;
+    } %>
+    <script>
+        
+    </script>
 </body>
 </html>
