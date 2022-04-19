@@ -75,12 +75,15 @@ class GrupoDAO {
 
     static async dataAtual() {
         let d = new Date();
-        const dataAtual = d.getFullYear() + '-'+d.getMonth()+'-'+d.getDate()+ ' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds()
+        let mes = d.getMonth()+1;
+        const dataAtual = d.getFullYear() + '-'+mes+'-'+d.getDate()+ ' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
+        console.log(dataAtual);
         return dataAtual;
     }
 
     static async mostrarMensagens(grupo) {
-        const sql = 'SELECT * FROM mensagem where grupo = $1 order by dataEnvio';
+        const sql = 'SELECT mensagem.dataenvio, mensagem.grupo, mensagem.texto, usuario.nome FROM mensagem join usuario on usuario.id = mensagem.usuario where grupo = $1 order by dataEnvio desc limit 10;';
+        // const sql = 'SELECT * FROM mensagem where grupo = $1 order by dataEnvio';
         const values = [grupo.id];
         const mensagens = await dbcon.query(sql, values);
         return mensagens.rows;

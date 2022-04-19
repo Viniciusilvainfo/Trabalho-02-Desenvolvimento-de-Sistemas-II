@@ -6,49 +6,79 @@
 <body>
 
     <%- include('includes/navbar') %>    
-
-    <h1>Grupo <%= grupo.nome %></h1>
-    <h2>Grupo id <%= grupo.id %></h2>
-    
-    <h3>Grupo admin <%= grupo.adm %></h3>
-    <% if (tipo != undefined) { %>
-        <% if (tipo.tipo == "adm" || tipo.tipo == "escritor") { %>
-            <form action="/grupos/<%=grupo.id%>/enviarMensagem" method="post">
-                <input type="hidden" name="grupo" value="<%=grupo.id%>">
-                <input type="hidden" name="usuario" value="<%=user.id%>">
-                <input type="text" name="mensagem"><button>Enviar mensagem</button>
-            </form>    
-        <% if(tipo.tipo=="adm") { %>
-            <form action="/grupos/<%=grupo.id%>/adicionarUsuario" method="post">
-            <input type="hidden" name="grupo" value="<%=grupo.id%>">
-            <input type="hidden" name="usuario" value="<%=user.id%>">
-            Escritor:
-            <input type="radio" name="tipo" value="escritor">
-            Leitor:
-            <input type="radio" name="tipo" value="leitor">
-            <input type="text" name="usuarioadd"><button>Adicionar usuário</button>
-        </form>  
-        <%}}}%>
-    <div id="mensagens">
-        <% if(mensagens != undefined) { 
-            mensagens.forEach(mensagem => {%>
-                <% let d = mensagem.dataenvio;
-                mensagem.dataenvio = data(d);
-                %>
-                <p><%= mensagem.texto %> às <%= mensagem.dataenvio %></p>
-            <% })}%>
+    <div class="container-fluid bg-teste">
+        <div class="row justify-content-center text-center border w-150">
+            <div class="col col-lg-2 bg-secundario">
+                Lateral
+            </div>
+            <div class="col col-6 border bg-principal px-0 pb-0">
+                <h1 class="mx-auto">Grupo <%= grupo.nome %></h1>
+                <div id="mensagens">
+                    <% if(mensagens != undefined) { 
+                        mensagens.forEach(mensagem => {%>
+                            <% let d = mensagem.dataenvio;
+                            mensagem.dataenvio = data(d);
+                            %>
+                            
+                            <div class="card text-dark mb-3 p-0 border-0">
+                                <div class="card-body">
+                                    <p><%= mensagem.texto %>
+                                    </p>
+                                </div>
+                                <div class="d-flex bg-principal">
+                                <% if(user.nome == mensagem.nome) { mensagem.nome = 'Você' %>
+                                    <div class="w-50 bg-principal m-0  margin-negativa">
+                                    </div>
+                                    <div class="w-50 bg-success margin-negativa rounded-bottom">
+                                        <p> <%= mensagem.nome %> <%= mensagem.dataenvio %></p>
+                                    </div>
+                                <% }else { %>
+                                    <div class="w-50 bg-success margin-negativa rounded-bottom">
+                                    <p> <%= mensagem.nome %> <%= mensagem.dataenvio %></p>
+                                </div>
+                                <div class="w-50 bg-principal m-0  margin-negativa">
+                                </div>
+                                <% } %>
+                                </div>
+                            </div>
+                            <!-- <br> -->
+                    <% })}%>
+                </div>
+                <% if (tipo != undefined) { %>
+                    <% if (tipo.tipo == "adm" || tipo.tipo == "escritor") { %>
+                        <form action="/grupos/<%=grupo.id%>/enviarMensagem" method="post">
+                            <input type="hidden" name="grupo" value="<%=grupo.id%>">
+                            <input type="hidden" name="usuario" value="<%=user.id%>">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Digite aqui" aria-label="Recipient's username" aria-describedby="basic-addon2" name="mensagem">
+                                <button class="btn btn-light border border-dark" type="submit" id="button-addon2">Enviar Mensagem</button>
+                            </div>
+                        </form>
+                    <%}}%>
+            </div>
+            <div class="col col-lg-2 bg-secundario">
+                Usuarios:
+            <% if (tipo != undefined) {%>
+                    <% if(tipo.tipo=="adm") { %>
+                        <form action="/grupos/<%=grupo.id%>/adicionarUsuario" method="post">
+                        <input type="hidden" name="grupo" value="<%=grupo.id%>">
+                        <input type="hidden" name="usuario" value="<%=user.id%>">
+                        Escritor:
+                        <input type="radio" name="tipo" value="escritor">
+                        Leitor:
+                        <input type="radio" name="tipo" value="leitor">
+                        <input type="text" placeholder="Email do Usuário" name="usuarioadd"><button>Adicionar usuário</button>
+                    </form>  
+                <%}}%>
+            </div>
+        </div>
     </div>
-    <br/><br/>
 
     <% function data(d) {
         let dia = d.getDate().toString();
-        let mes = d.getMonth().toString();
+        let mes = (d.getMonth()+1).toString();
         let hora = d.getHours().toString();
         let minuto = d.getMinutes().toString();
-        console.log(dia.length);
-        console.log(mes.length);
-        console.log(hora.length);
-        console.log(minuto.length);
         if (dia.length == 1) {
             dia = '0'+dia; 
         }
@@ -65,8 +95,6 @@
         let dataMensagem = dia+'/'+mes+'/'+d.getFullYear()+ ' às '+hora+':'+minuto;
         return dataMensagem;
     } %>
-    <script>
-        
-    </script>
+    <%- include('includes/script') %>    
 </body>
 </html>

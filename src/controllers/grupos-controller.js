@@ -41,7 +41,7 @@ class GruposController {
         const { id } = req.params;
         const grupo = await GrupoDAO.buscaPeloId(id);
         // console.log(req.session.user);
-        console.log(grupo);
+        // console.log(grupo);
         var tipo = undefined;
         if(req.session.user != undefined) {
             
@@ -81,9 +81,7 @@ class GruposController {
         const user = new User (null, null, grupoBody.usuarioadd, null, null);
 
         const usuarioEncontrado = await UserDAO.logar(user);
-        console.log('ANTES');
-        console.log(usuarioEncontrado.rows[0]);
-        console.log('DEPOIS');
+        // console.log(usuarioEncontrado.rows[0]);
         if(usuarioEncontrado.rows[0] == undefined) return res.send('User nao encontrado');
         await GrupoDAO.adicionaGrupo(usuarioEncontrado.rows[0].id, grupoBody.grupo, grupoBody.tipo);
         return res.redirect('/');

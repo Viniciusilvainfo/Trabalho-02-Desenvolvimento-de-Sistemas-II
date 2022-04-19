@@ -12,8 +12,20 @@ header {
     align-items: center;
     padding: 20px 50px;
     box-shadow: 0 1px 8px #ddd;
+    color: white;
+    background-image: linear-gradient(to left, rgb(147, 12, 243), rgb(52, 28, 124));
 }
 
+
+.bg-principal {
+    color: white;
+    background-color:rgb(52, 28, 124);
+}
+
+.bg-secundario {
+    color: black;
+    background-color:rgb(152, 14, 206);
+}
 #nav-title {
     margin-right: auto;
     font-size: 1.5em;
@@ -27,8 +39,8 @@ header li {
 
 header a {
     text-decoration: none;
-    color: #555;
-    transition: all 0.3s ease 0s;
+    color: white;
+    transition: all 0.8s ease 0s;
 }
 
 header a:hover {
