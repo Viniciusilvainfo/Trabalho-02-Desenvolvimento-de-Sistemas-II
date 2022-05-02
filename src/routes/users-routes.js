@@ -13,4 +13,6 @@ routes.get('/perfil', usersController.perfil);
 
 routes.get('/logout', usersController.logout);
 
+routes.post('/removerGrupo', usersController.removerGrupo);
+
 module.exports = routes;

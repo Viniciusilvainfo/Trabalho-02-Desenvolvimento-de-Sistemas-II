@@ -6,36 +6,33 @@
 <body>
 
     <%- include('includes/navbar') %>    
-    <div class="container-fluid bg-teste">
-        <div class="row justify-content-center text-center border w-150">
-            <div class="col col-lg-2 bg-secundario">
-                Lateral
-            </div>
-            <div class="col col-6 border bg-principal px-0 pb-0">
+    <div class="container-fluid mt-4 mb-4">
+        <div class="row justify-content-center text-center">
+            <div class="col col-sm-8 col-lg-6 bg-principal pt-4 pb-4 px-2 border border-5 border-light">
                 <h1 class="mx-auto">Grupo <%= grupo.nome %></h1>
                 <div id="mensagens">
                     <% if(mensagens != undefined) { 
+                        let cor = '';
                         mensagens.forEach(mensagem => {%>
                             <% let d = mensagem.dataenvio;
                             mensagem.dataenvio = data(d);
                             %>
                             
-                            <div class="card text-dark mb-3 p-0 border-0">
-                                <div class="card-body">
-                                    <p><%= mensagem.texto %>
-                                    </p>
-                                </div>
+                            <% if(user.nome == mensagem.nome) {
+                                cor = 'verde'; } %>
+                            <div class="card bg-secundario text-dark mb-3 p-0 border-0 <%= cor %>">
+                                    <h6 class="mt-3 mb-3"> <%= mensagem.texto %></h6>
                                 <div class="d-flex bg-principal">
-                                <% if(user.nome == mensagem.nome) { mensagem.nome = 'Você' %>
+                                <% cor = ''; if(user.nome == mensagem.nome) { mensagem.nome = 'Você' %>
                                     <div class="w-50 bg-principal m-0  margin-negativa">
                                     </div>
-                                    <div class="w-50 bg-success margin-negativa rounded-bottom">
-                                        <p> <%= mensagem.nome %> <%= mensagem.dataenvio %></p>
+                                    <div class="w-50 margin-negativa rounded-bottom d-flex justify-content-end">
+                                        <h6> <%= mensagem.nome %> <%= mensagem.dataenvio %></h6>
                                     </div>
                                 <% }else { %>
-                                    <div class="w-50 bg-success margin-negativa rounded-bottom">
-                                    <p> <%= mensagem.nome %> <%= mensagem.dataenvio %></p>
-                                </div>
+                                    <div class="w-50 margin-negativa rounded-bottom d-flex justify-content-start">
+                                        <h6> <%= mensagem.nome %> <%= mensagem.dataenvio %></h6>
+                                    </div>
                                 <div class="w-50 bg-principal m-0  margin-negativa">
                                 </div>
                                 <% } %>
@@ -46,30 +43,66 @@
                 </div>
                 <% if (tipo != undefined) { %>
                     <% if (tipo.tipo == "adm" || tipo.tipo == "escritor") { %>
-                        <form action="/grupos/<%=grupo.id%>/enviarMensagem" method="post">
+                        <form action="/grupos/<%=grupo.id%>/enviarMensagem" method="post" id="form" class="mb-2" onsubmit="validarForm()">
                             <input type="hidden" name="grupo" value="<%=grupo.id%>">
                             <input type="hidden" name="usuario" value="<%=user.id%>">
                             <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Digite aqui" aria-label="Recipient's username" aria-describedby="basic-addon2" name="mensagem">
-                                <button class="btn btn-light border border-dark" type="submit" id="button-addon2">Enviar Mensagem</button>
+                                <input type="text" class="form-control" placeholder="Digite aqui" name="mensagem" id="mensagem">
+                                <button class="btn bg-secundario border border-dark" type="submit" id="button-addon2">Enviar Mensagem</button>
                             </div>
                         </form>
                     <%}}%>
             </div>
-            <div class="col col-lg-2 bg-secundario">
-                Usuarios:
-            <% if (tipo != undefined) {%>
-                    <% if(tipo.tipo=="adm") { %>
-                        <form action="/grupos/<%=grupo.id%>/adicionarUsuario" method="post">
-                        <input type="hidden" name="grupo" value="<%=grupo.id%>">
-                        <input type="hidden" name="usuario" value="<%=user.id%>">
-                        Escritor:
-                        <input type="radio" name="tipo" value="escritor">
-                        Leitor:
-                        <input type="radio" name="tipo" value="leitor">
-                        <input type="text" placeholder="Email do Usuário" name="usuarioadd"><button>Adicionar usuário</button>
-                    </form>  
-                <%}}%>
+            <div class="col col-lg-3 bg-principal pt-4 pb-4 border border-5 border-light">
+                <h3 class="mx-auto">Usuarios:</h3>
+                <% if (tipo != undefined) {%>
+                        <% if(tipo.tipo=="adm") { %>
+                            <form action="/grupos/<%=grupo.id%>/adicionarUsuario" method="post" id="form2">
+                                <input type="hidden" name="grupo" value="<%=grupo.id%>">
+                                <input type="hidden" name="usuario" value="<%=user.id%>">
+                                <input class="form-check-input" type="radio" name="tipo" id="radio1" value="escritor">
+                                <label class="form-check-label" for="radio1">
+                                    Escritor
+                                </label>
+                                <input class="form-check-input ms-2" type="radio" name="tipo" id="radio2" value="leitor">
+                                <label class="form-check-label" for="radio2">
+                                    Leitor
+                                </label>
+                                <input type="text" class="form-control mt-2" placeholder="Email do usuário" name="usuarioadd">
+                                <button class="btn bg-secundario border border-dark mt-2" type="submit" id="button-addon2">Adicionar Usuário</button>
+                            </form>
+                    <%}}%>
+                    <div class="mt-2 d-flex flex-column justify-content-center">
+                        
+                        <% if (usuarios != undefined) { 
+                            if(tipo.tipo == 'escritor' || tipo.tipo == 'leitor') { %> 
+                            <form action="/users/removerGrupo" method="post">
+                                <input type="hidden" name="grupo" value="<%= grupo.id %>">
+                                <button name="usuario" class="btn bg-secundario border border-dark" value="<%= user.id %>"> Sair </button>
+                            </form>
+                            <% } %>
+                            <table id="filmes" class="filmes2">
+
+                                <% usuarios.forEach(usuario => {
+                                    if (usuario.nome == user.nome ){ var meunome = usuario.nome; usuario.nome = "Você"; } 
+                                %>
+                                    <tr>
+                                        <td>
+                                            <p><%= usuario.nome %> (<%= usuario.tipo %>) </p>
+                                        </td>
+                                        <% if( tipo.tipo == 'adm' && meunome != user.nome) {  %> 
+                                        <td>
+                                            <form action="/users/removerGrupo" method="post">
+                                                <input type="hidden" name="grupo" value="<%= grupo.id %>">
+                                                <button name="usuario" class="btn bg-secundario border border-dark" value="<%= usuario.id%>"> Remover Usuário </button>
+                                            </form>
+                                        </td>
+                                        <% } %>
+                                    </tr>
+                                <% }) %> 
+                            </table>
+                        <% } %>
+                    </div>
             </div>
         </div>
     </div>
@@ -95,6 +128,17 @@
         let dataMensagem = dia+'/'+mes+'/'+d.getFullYear()+ ' às '+hora+':'+minuto;
         return dataMensagem;
     } %>
+    <script>
+        document.getElementById('form').onsubmit = function() {
+            const mensagem = document.getElementById('mensagem');
+            if(mensagem.value.trim() == "") {
+                alert('Não é permitido enviar mensagem vazia');
+                return false;
+            }else {
+                return true;
+            }
+        };
+    </script>
     <%- include('includes/script') %>    
 </body>
 </html>

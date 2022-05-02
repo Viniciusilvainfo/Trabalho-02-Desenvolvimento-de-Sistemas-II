@@ -1,0 +1,12 @@
+O que falta fazer?
+
+1 - Arrrumar o CSS (nivel de prioridade: médio)
+2 - Login e Cadastro (ambos de usuário) não serem páginas estáticas (nivel de prioridade: baixo)
+3 - Não autorizar a criação de grupo sem nome (nivel de prioridade: médio)
+4 - (FEITO) Não permitir enviar mensagem vazia (nivel de prioridade: médio)
+5 - Exibir mensagem de erro quando o tipo do usuário não for informado ao adicionar ele no grupo (nivel de prioridade: médio)
+6 - (FEITO) Mostrar na tela todos os usuários do grupo com seus respectivos tipos (nivel de prioridade: alta)
+7 - Paginar mensagem (10 por página), grupos (5 por página) e usuários do grupo (10 por página) (nivel de prioridade: alta)
+8 - Ter uma página para "meus grupos" para usuários já logados (nivel de prioridade: alta)
+9 - Mostra mensagem de sucesso/erro ao adicionar um usuário na tela (nivel de prioridade: médio)
+10 -(FEITO) Admin e o próprio usuário podem remover/sair do grupo (nivel de prioridade: alta)

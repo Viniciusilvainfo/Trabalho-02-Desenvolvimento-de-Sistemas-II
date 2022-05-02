@@ -49,23 +49,25 @@ class GruposController {
             const result = await GrupoDAO.verificaGrupo(grupo, req.session.user);
 
             // console.log(result.rows[0]);
-            
+
             if(result.rows[0] != undefined) {
                 tipo = result.rows[0];
                 //retorna as mensagens do grupo
                 const mensagens = await GrupoDAO.mostrarMensagens(grupo); 
-
-                if(mensagens != undefined) {
-                    // console.log(mensagens + 'D');
-                }else {
+                const usuarios = await UserDAO.listarUsuarios(grupo); 
+                if(mensagens == undefined) {
                     tipo = undefined;
                 }
-                return res.render('detalhar', { grupo: grupo, user: req.session.user, mensagens:mensagens, tipo: tipo});
+
+                if(usuarios == undefined) {
+                    usuarios = undefined;
+                }
+                return res.render('detalhar', { grupo: grupo, user: req.session.user, mensagens:mensagens, tipo: tipo, usuarios:usuarios});
             }
-            
+
         }
 
-        return res.render('detalhar', { grupo: grupo, user: req.session.user, mensagens:undefined, tipo:tipo });
+        return res.render('detalhar', { grupo: grupo, user: req.session.user, mensagens:undefined, tipo:tipo, usuarios:undefined });
     }
 
     async enviarMensagem(req, res) {

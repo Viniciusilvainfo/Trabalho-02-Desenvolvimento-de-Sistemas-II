@@ -49,6 +49,15 @@ class UsersController {
         return res.redirect('/');
     }
 
+    async removerGrupo(req, res) {
+        const userBody = req.body;
+        console.log(userBody);
+
+        await UserDAO.removerGrupo(userBody);
+
+        return res.redirect('/');
+    }
+
 }
 
 module.exports = UsersController;
