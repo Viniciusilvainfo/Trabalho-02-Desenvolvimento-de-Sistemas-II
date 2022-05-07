@@ -1,5 +1,6 @@
 const { dbcon } = require("../config/connection-db");
 const bcrypt = require('bcrypt');
+const { GruposController } = require("../controllers/grupos-controller");
 
 class User {
     constructor(id, nome, email, senha, nascimento) {
@@ -44,8 +45,16 @@ class UserDAO {
         return confereSenha;
     }
 
+    static async meusGrupos(user) {
+        const sql = 'SELECT * FROM usuario join grupo_usuario on usuario.id = grupo_usuario.usuario join grupo on grupo.id = grupo_usuario.grupo where usuario.id = $1';
+        const values = [user];
+
+        const grupos = await dbcon.query(sql, values);
+        return grupos;
+    }
+
     static async listarUsuarios(grupo) {
-        const sql = 'SELECT usuario.id, usuario.nome, grupo_usuario.tipo FROM grupo join grupo_usuario on grupo.id = grupo_usuario.grupo join usuario on usuario.id = grupo_usuario.usuario  where grupo.id = $1 order by 3, 2;';
+        const sql = 'SELECT usuario.id, usuario.nome, grupo_usuario.tipo FROM grupo join grupo_usuario on grupo.id = grupo_usuario.grupo join usuario on usuario.id = grupo_usuario.usuario where grupo.id = $1 order by 3, 2;';
         const values = [grupo.id];
         console.log('esse é o grupo '+ grupo.id);
 

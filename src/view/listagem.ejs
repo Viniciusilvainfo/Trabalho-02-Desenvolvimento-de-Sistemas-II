@@ -8,10 +8,12 @@
     <%- include('includes/navbar') %>    
 
     <% if (user) { %>
-      <h1>Bem vind@ <%= user.nome %></h1>
+      <h1>Olá <%= user.nome %></h1>
     <% } %>
 
-    <h1>Lista de todos os grupos</h1>
+    <div class="links">
+      <h1>Lista de todos os grupos</h1>
+    </div>
 
     <table id="filmes" class="filmes1">
         <tr>
@@ -27,6 +29,12 @@
           </tr>
         <% }) %>
     </table>
+
+    <div class="links">
+    <% for (let i = 1; i <= Math.ceil(qtdeGrupos/5); i++) { %>
+      <a class="pages" href="/grupos?page=<%= i %>"><%= i %></a>
+    <% } %>
+  </div>
 
     <%- include('includes/script') %>    
 </body>

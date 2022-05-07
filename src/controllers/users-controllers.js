@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const { User, UserDAO } = require('../models/user');
+const { Grupo, GrupoDAO } = require('../models/grupo');
 // const { dbcon } = require('../config/connection-db');
 // const session = require('express-session');
 // const { use } = require('bcrypt/promises');
@@ -39,8 +40,11 @@ class UsersController {
         }
     }
 
-    async perfil(req, res) {
-        return res.render('perfil', {user : req.session.user});
+    async meusgrupos(req, res) {
+
+        let meusgrupos = await UserDAO.meusGrupos(req.session.user.id);
+        meusgrupos = meusgrupos.rows;
+        return res.render('meusgrupos', {user : req.session.user, meusgrupos: meusgrupos});
     }
 
     async logout(req, res) {

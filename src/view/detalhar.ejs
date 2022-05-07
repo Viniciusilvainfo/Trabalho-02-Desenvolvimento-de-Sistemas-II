@@ -107,6 +107,11 @@
         </div>
     </div>
 
+    <div class="links">
+    <% console.log(qtdeMensagens); for (let i = 1; i <= Math.ceil(qtdeMensagens/10); i++) { %>
+      <a class="pages" href="/grupos/<%=grupo.id%>?page=<%= i %>"><%= i %></a>
+    <% } %>
+  </div>
     <% function data(d) {
         let dia = d.getDate().toString();
         let mes = (d.getMonth()+1).toString();

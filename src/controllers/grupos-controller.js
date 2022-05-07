@@ -33,27 +33,46 @@ class GruposController {
     }
 
     async listar(req, res) {
-        const result = await dbcon.query('SELECT count(*) as qtde, grupo.nome, grupo.id, grupo.adm FROM grupo JOIN grupo_usuario ON grupo.id = grupo_usuario.grupo GROUP BY grupo.id');
-        return res.render('listagem', { user: req.session.user, grupos: result.rows });
+
+        let { page } = req.query;
+        console.log({ page });
+
+        page = page || 1;
+        const limit = 5;
+        const offset = limit * (page - 1);
+        const sql = 'SELECT count(*) as qtde, grupo.nome, grupo.id, grupo.adm FROM grupo JOIN grupo_usuario ON grupo.id = grupo_usuario.grupo GROUP BY grupo.id order by 3 limit 5 offset $1';
+        const values = [offset];
+        const result = await dbcon.query(sql, values);
+        let qtdeGrupos = await dbcon.query('SELECT count(*) from grupo');
+        qtdeGrupos = qtdeGrupos.rows[0].count;
+        return res.render('listagem', { user: req.session.user, grupos: result.rows, page, qtdeGrupos });
     }
 
     async detalhar(req, res) {
         const { id } = req.params;
         const grupo = await GrupoDAO.buscaPeloId(id);
-        // console.log(req.session.user);
-        // console.log(grupo);
         var tipo = undefined;
+
         if(req.session.user != undefined) {
             
             // ve se o usuario faz parte do grupo
             const result = await GrupoDAO.verificaGrupo(grupo, req.session.user);
 
-            // console.log(result.rows[0]);
-
             if(result.rows[0] != undefined) {
                 tipo = result.rows[0];
+                let { page } = req.query;
+                console.log({ page });
+
+                page = page || 1;
+                const limit = 10;
+                const offset = limit * (page - 1);
                 //retorna as mensagens do grupo
-                const mensagens = await GrupoDAO.mostrarMensagens(grupo); 
+                const mensagens = await GrupoDAO.mostrarMensagens(grupo, offset); 
+                const sql = 'SELECT count(*) from mensagem where grupo = $1';
+                const values = [grupo.id];
+                var qtdeMensagens = await dbcon.query(sql, values);
+                // console.log(qtdeMensagens);
+                qtdeMensagens = qtdeMensagens.rows[0].count;
                 const usuarios = await UserDAO.listarUsuarios(grupo); 
                 if(mensagens == undefined) {
                     tipo = undefined;
@@ -62,7 +81,7 @@ class GruposController {
                 if(usuarios == undefined) {
                     usuarios = undefined;
                 }
-                return res.render('detalhar', { grupo: grupo, user: req.session.user, mensagens:mensagens, tipo: tipo, usuarios:usuarios});
+                return res.render('detalhar', { grupo: grupo, user: req.session.user, mensagens:mensagens, tipo: tipo, usuarios:usuarios, qtdeMensagens:qtdeMensagens, page: page});
             }
 
         }

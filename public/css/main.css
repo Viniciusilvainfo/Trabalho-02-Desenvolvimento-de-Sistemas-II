@@ -16,6 +16,22 @@ header {
     background-image: linear-gradient(to left, rgb(147, 12, 243), rgb(52, 28, 124));
 }
 
+.cor1 {
+    background-image: linear-gradient(to left, rgb(147, 12, 243), rgb(52, 28, 124));
+}
+
+.links {
+      display: flex;
+      justify-content: center;
+    }
+    .pages {
+      text-decoration: none;
+      border: 1px solid black;
+      border-radius: 2px;
+      font-size: 2rem;
+      padding: 2px;
+      margin: 15px;
+    }
 
 .bg-principal {
     color: white;
@@ -62,13 +78,14 @@ header a:hover {
 #filmes {
     font-family: Arial, Helvetica, sans-serif;
     border-collapse: collapse;
-    width: 100%;
+    /* width: 100%; */
     margin: auto;
     margin-top: 40px;
 }
 
 .filmes1 {
     width: 80%;
+    border: 1px solid red;
 }
 
 .filmes2 {

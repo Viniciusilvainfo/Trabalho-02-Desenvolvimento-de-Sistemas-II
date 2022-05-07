@@ -9,7 +9,7 @@ routes.post('/cadastrar', usersController.cadastrar);
 
 routes.post('/login', usersController.login);
 
-routes.get('/perfil', usersController.perfil);
+routes.get('/meusgrupos', usersController.meusgrupos);
 
 routes.get('/logout', usersController.logout);
 

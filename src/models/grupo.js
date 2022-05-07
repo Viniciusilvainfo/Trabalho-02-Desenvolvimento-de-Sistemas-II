@@ -81,10 +81,10 @@ class GrupoDAO {
         return dataAtual;
     }
 
-    static async mostrarMensagens(grupo) {
-        const sql = 'SELECT mensagem.dataenvio, mensagem.grupo, mensagem.texto, usuario.nome FROM mensagem join usuario on usuario.id = mensagem.usuario where grupo = $1 order by dataEnvio desc limit 10;';
+    static async mostrarMensagens(grupo, offset) {
+        const sql = 'SELECT mensagem.dataenvio, mensagem.grupo, mensagem.texto, usuario.nome FROM mensagem join usuario on usuario.id = mensagem.usuario where grupo = $1 order by dataEnvio desc limit 10 offset $2;';
         // const sql = 'SELECT * FROM mensagem where grupo = $1 order by dataEnvio';
-        const values = [grupo.id];
+        const values = [grupo.id, offset];
         const mensagens = await dbcon.query(sql, values);
         return mensagens.rows;
     }
