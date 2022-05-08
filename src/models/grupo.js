@@ -77,7 +77,7 @@ class GrupoDAO {
         let d = new Date();
         let mes = d.getMonth()+1;
         const dataAtual = d.getFullYear() + '-'+mes+'-'+d.getDate()+ ' '+d.getHours()+':'+d.getMinutes()+':'+d.getSeconds();
-        console.log(dataAtual);
+        // console.log(dataAtual);
         return dataAtual;
     }
 

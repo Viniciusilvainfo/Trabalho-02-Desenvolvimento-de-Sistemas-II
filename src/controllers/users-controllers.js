@@ -12,13 +12,16 @@ class UsersController {
         const senha = bcrypt.hashSync(userBody.senha, 10); 
         const user = new User (null, userBody.nome, userBody.email, senha, userBody.nascimento);
 
-        await UserDAO.cadastrar(user);
-        
-        const usuarioEcontrado = await UserDAO.logar(user);
-        
-        req.session.user = usuarioEcontrado.rows[0];
+        const usuarioEncontrado = await UserDAO.logar(user);
+        if(usuarioEncontrado.rows.length > 0) {
+            return res.send('Esse email já foi cadastrado no sistema <br><br> <a href="/user/cadastro.html">Voltar</a>');
+        }else {
+            await UserDAO.cadastrar(user);
+            const usuarioEcontrado = await UserDAO.logar(user);
+            req.session.user = usuarioEcontrado.rows[0];
+            return res.redirect('/');
+        }
 
-        return res.redirect('/');
     }
 
     async login(req, res) {
@@ -28,7 +31,7 @@ class UsersController {
 
         const usuarioEcontrado = await UserDAO.logar(user);
 
-        if (usuarioEcontrado.rows[0] == undefined) return res.send('User nao encontrado');
+        if (usuarioEcontrado.rows[0] == undefined) return res.send('User nao encontrado <br><br> <a href="/user/login.html">Voltar</a>');
 
         const confereSenha = await UserDAO.verificaSenha(user);
 
@@ -36,15 +39,18 @@ class UsersController {
             req.session.user = usuarioEcontrado.rows[0];
             return res.redirect('/');
         } else {
-            return res.send('Senha nao confere...');
+            return res.send('Senha nao confere <br><br> <a href="/user/login.html">Voltar</a>');
         }
     }
 
     async meusgrupos(req, res) {
 
         let meusgrupos = await UserDAO.meusGrupos(req.session.user.id);
-        meusgrupos = meusgrupos.rows;
-        return res.render('meusgrupos', {user : req.session.user, meusgrupos: meusgrupos});
+        if(meusgrupos.rows.length > 0 ) {
+            return res.render('meusgrupos', {user : req.session.user, meusgrupos: meusgrupos.rows});
+        }else {
+            return res.render('meusgrupos', {user : req.session.user, meusgrupos: undefined});
+        }
     }
 
     async logout(req, res) {
@@ -55,11 +61,10 @@ class UsersController {
 
     async removerGrupo(req, res) {
         const userBody = req.body;
-        console.log(userBody);
 
         await UserDAO.removerGrupo(userBody);
 
-        return res.redirect('/');
+        return res.redirect('/grupos/'+userBody.grupo);
     }
 
 }

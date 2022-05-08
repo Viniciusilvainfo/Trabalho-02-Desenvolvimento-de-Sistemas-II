@@ -56,7 +56,7 @@ class UserDAO {
     static async listarUsuarios(grupo) {
         const sql = 'SELECT usuario.id, usuario.nome, grupo_usuario.tipo FROM grupo join grupo_usuario on grupo.id = grupo_usuario.grupo join usuario on usuario.id = grupo_usuario.usuario where grupo.id = $1 order by 3, 2;';
         const values = [grupo.id];
-        console.log('esse é o grupo '+ grupo.id);
+        // console.log('esse é o grupo '+ grupo.id);
 
         const usuarios = await dbcon.query(sql, values);
 

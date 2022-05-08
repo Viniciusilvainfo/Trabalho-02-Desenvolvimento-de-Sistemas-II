@@ -18,24 +18,14 @@ class GruposController {
     }
 
     async mostraAlterar(req, res) {
-        // const { id } = req.params;
-        // const filme = await FilmeDAO.buscaPeloId(id);
-        // res.render('alterar-filme', { filme: filme })
     }
 
     async alterar(req, res) {
-        // const { id } = req.params;
-        // const { nome, genero, sinopse, lancamento} = req.body;
-        // const grupo = new Grupo(id, nome, genero, sinopse, lancamento);
-        
-        // const resultado = await FilmeDAO.atualiza(filme);
-        // res.send("Chamei o alterar do controller e fui pro banco... resultado " + resultado);
     }
 
     async listar(req, res) {
 
         let { page } = req.query;
-        console.log({ page });
 
         page = page || 1;
         const limit = 5;
@@ -54,24 +44,20 @@ class GruposController {
         var tipo = undefined;
 
         if(req.session.user != undefined) {
-            
-            // ve se o usuario faz parte do grupo
+
             const result = await GrupoDAO.verificaGrupo(grupo, req.session.user);
 
             if(result.rows[0] != undefined) {
                 tipo = result.rows[0];
                 let { page } = req.query;
-                console.log({ page });
 
                 page = page || 1;
                 const limit = 10;
                 const offset = limit * (page - 1);
-                //retorna as mensagens do grupo
                 const mensagens = await GrupoDAO.mostrarMensagens(grupo, offset); 
                 const sql = 'SELECT count(*) from mensagem where grupo = $1';
                 const values = [grupo.id];
                 var qtdeMensagens = await dbcon.query(sql, values);
-                // console.log(qtdeMensagens);
                 qtdeMensagens = qtdeMensagens.rows[0].count;
                 const usuarios = await UserDAO.listarUsuarios(grupo); 
                 if(mensagens == undefined) {
@@ -86,7 +72,7 @@ class GruposController {
 
         }
 
-        return res.render('detalhar', { grupo: grupo, user: req.session.user, mensagens:undefined, tipo:tipo, usuarios:undefined });
+        return res.render('detalhar', { grupo: grupo, user: req.session.user, mensagens:undefined, tipo:tipo, usuarios:undefined, qtdeMensagens:undefined, page:undefined });
     }
 
     async enviarMensagem(req, res) {
@@ -102,24 +88,17 @@ class GruposController {
         const user = new User (null, null, grupoBody.usuarioadd, null, null);
 
         const usuarioEncontrado = await UserDAO.logar(user);
-        // console.log(usuarioEncontrado.rows[0]);
-        if(usuarioEncontrado.rows[0] == undefined) return res.send('User nao encontrado');
-        await GrupoDAO.adicionaGrupo(usuarioEncontrado.rows[0].id, grupoBody.grupo, grupoBody.tipo);
-        return res.redirect('/');
+        if(usuarioEncontrado.rows[0] == undefined) return res.send('User nao encontrado <br><br> <a href="/grupos/'+grupoBody.grupo+'">Voltar</a>');
+        console.log(grupoBody.tipo);
+        if(grupoBody.tipo != undefined) {
+            await GrupoDAO.adicionaGrupo(usuarioEncontrado.rows[0].id, grupoBody.grupo, grupoBody.tipo);
+        } else {
+            return res.send('Informe um tipo para o usuário <br><br> <a href="/grupos/'+grupoBody.grupo+'">Voltar</a>');
+        }
+        return res.redirect('/grupos/'+grupoBody.grupo);
     }
 
     async deletar(req, res) {
-        // const { id } = req.params;
-        // BUSCAR O FILME E REMOVER DO VETOR
-        // const filmeIdx = filmes.findIndex(f => f.id == id);
-        // filmes.splice(filmeIdx, 1);
-
-        // FILTRAR O VETOR DE FILMES BASEADO NO ID != DO ID DA REMOÇÃO
-        // filmes = filmes.filter(f => f.id != id);
-        
-        // BANCO - SQL COM DELETE WHERE
-
-        // return res.redirect('/filmes')
     }
 
 }

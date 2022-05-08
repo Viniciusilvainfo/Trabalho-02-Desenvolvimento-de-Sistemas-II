@@ -25,20 +25,15 @@
             <th>Nome</th>
             <th></th>
         </tr>
-        <% meusgrupos.forEach(grupo => { %>
+        <% if(meusgrupos != undefined){ meusgrupos.forEach(grupo => { %>
             <tr>
                 <!-- <td><%= grupo.qtde %></td> -->
                 <td><%= grupo.nome %></td>
                 <td> <a href="/grupos/<%=grupo.id%>">Detalhes</a>  </td>
             </tr>
-        <% }) %>
+        <% })} %>
     </table>
 
-    <!-- <div class="links">
-    <% for (let i = 1; i <= Math.ceil(qtdeGrupos/5); i++) { %>
-        <a class="pages" href="/grupos?page=<%= i %>"><%= i %></a>
-    <% } %>
-    </div> -->
     <%- include('includes/script') %>    
 </body>
 </html>
