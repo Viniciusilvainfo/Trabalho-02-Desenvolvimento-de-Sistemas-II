@@ -11,8 +11,8 @@ app.use(express.urlencoded({
 
 app.use(express.json());
 
-// const session = require('express-session');
-const session = require('cookie-session');
+const session = require('express-session');
+// const session = require('cookie-session');
 app.use(session({
     secret: 'chave secreta de criptografia',
     resave: false,
