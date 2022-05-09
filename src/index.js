@@ -5,18 +5,17 @@ const app = express();
 app.set('view engine', 'ejs');
 app.set('views', './src/view');
 
-// PARSER DOS FORMULÁRIOS
 app.use(express.urlencoded({
     extended: true,
 }));
 
-// PARSER DAS REQUISIÇOES COM JSON
 app.use(express.json());
 
-const session = require('express-session');
+// const session = require('express-session');
+const session = require('cookie-session');
 app.use(session({
     secret: 'chave secreta de criptografia',
-    resave: false, // NAO SOBRESCREVER CASO NAO HAJA MODIFICAÇÕES,
+    resave: false,
     saveUninitialized: false,
     cookie: { secure: false }
 }))
@@ -25,10 +24,6 @@ app.use(session({
 app.use(express.static('public'));
 
 app.use('*', (req, res, next) => {
-    // console.log(`Request recebido para ${req.baseUrl} as ${new Date()}`);
-
-    // atrasando o usuario kkkkk
-    // setTimeout(() => next(), 1000);
     next();
 })
 
@@ -50,8 +45,5 @@ app.use('*', (req, res) => {
 })
 
 const dbcon = require('./config/connection-db');
-// console.log(dbcon);
 
-// const PORT = process.env.PORT;
-// console.log({PORT});
 app.listen(3000, () => console.log(`Server iniciado na porta 3000`));
